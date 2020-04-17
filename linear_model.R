@@ -9,14 +9,14 @@ data = read.csv('data.csv')
 cor(data[,c('first','second','glove','cbow','skipgram','lsa','pmi')])
 scatterplotMatrix(data[,c('first','second','glove','cbow','skipgram','lsa','pmi')])
 
-hist(data$IRT)
-hist(data$first_order)
-hist(data$second_order)
-hist(data$delta_frequency_sheer)
-hist(data$delta_frequency_rank)
-hist(data$delta_frequency_log)
-hist(abs(data$delta_frequency_sheer))
-hist(abs(data$delta_frequency_log))
+hist(data$first)
+hist(data$second)
+hist(data$glove)
+hist(data$cbow)
+hist(data$skipgram)
+hist(data$lsa)
+hist(abs(data$pmi))
+
 
 lm_glove = lm( data$glove ~ 1 + data$first+ data$second)
 lm_cbow = lm( data$cbow ~ 1 + data$first+ data$second)
@@ -30,6 +30,13 @@ summary(lm_skipgram)
 summary(lm_lsa)
 summary(lm_pmi)
 
+d_matrix = rbind(c(lm_glove$coefficients[1],lm_glove$coefficients[2],lm_glove$coefficients[3],summary(lm_glove)$r.squared),
+      c(lm_cbow$coefficients[1],lm_cbow$coefficients[2],lm_cbow$coefficients[3],summary(lm_cbow)$r.squared),
+      c(lm_skipgram$coefficients[1],lm_skipgram$coefficients[2],lm_skipgram$coefficients[3],summary(lm_skipgram)$r.squared),
+      c(lm_lsa$coefficients[1],lm_lsa$coefficients[2],lm_lsa$coefficients[3],summary(lm_lsa)$r.squared),
+      c(lm_pmi$coefficients[1],lm_pmi$coefficients[2],lm_pmi$coefficients[3],summary(lm_pmi)$r.squared))
+
+write.csv(d_matrix,'lm_coefficients.csv')
 confint(lm_f)
 confint(lm_s)
 confint(lm_sh_f)
