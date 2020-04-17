@@ -44,7 +44,7 @@ first.columns = mydict.keys()
 first.index = mydict.keys()
 #first.to_csv('first.csv', index = False)
 
-plot(first,list(first.columns))
+#plot(first,list(first.columns))
 
 second = jac.get_jaccard_matrix(wd,2,second_order=True)
 np.fill_diagonal(second,0)
@@ -54,7 +54,7 @@ second.index = mydict.keys()
 #second.to_csv('second.csv', index = False)
 
 
-plot(second,second.columns)
+#plot(second,second.columns)
 
 # convert 1 2 to flattened upper matrix
 first = np.array(first)
@@ -73,11 +73,11 @@ words = sorted(list(vects.loc[:,vects.columns == 0][0]))
 out = pd.DataFrame(cosine(vects.loc[:, vects.columns != 0]))
 #out.to_csv('glove.csv', index = False)
 
-plot(out,out.columns)
+#plot(out,out.columns)
 
 out = np.array(out)
 out = out[np.triu_indices(out.shape[0],k=1)].reshape(66,1)
-data['glove'] = second[np.triu_indices(first.shape[0],k=1)]
+data['glove'] = out
 
 ############
 # CBOW
@@ -110,11 +110,11 @@ random.shuffle(statements)
 out = train_model_get_cosine_matrix(statements)
 #out.to_csv('cbow.csv', index = False)
 
-plot(out,out.columns)
+#plot(out,out.columns)
 
 out = np.array(out)
 out = out[np.triu_indices(out.shape[0],k=1)].reshape(66,1)
-data['cbow'] = second[np.triu_indices(first.shape[0],k=1)]
+data['cbow'] = out
 
 
 ############
@@ -147,11 +147,11 @@ with open(path_out,'r') as file:
 random.shuffle(statements)
 out = train_model_get_cosine_matrix(statements)
 #out.to_csv('skipgram.csv', index = False)
-plot(out,out.columns)
+#plot(out,out.columns)
 
 out = np.array(out)
 out = out[np.triu_indices(out.shape[0],k=1)].reshape(66,1)
-data['skipgram'] = second[np.triu_indices(first.shape[0],k=1)]
+data['skipgram'] = out
 
 #########
 # LSA
@@ -194,11 +194,11 @@ with open(path_out,'r') as file:
     
 out = train_model_get_cosine_matrix(statements,6)
 #out.to_csv('lsa.csv', index = False)
-plot(out,out.columns)
+#plot(out,out.columns)
 
 out = np.array(out)
 out = out[np.triu_indices(out.shape[0],k=1)].reshape(66,1)
-data['lsa'] = second[np.triu_indices(first.shape[0],k=1)]
+data['lsa'] = out
 
 #######
 # PMI
@@ -247,8 +247,10 @@ with open(path_out,'r') as file:
     statements = file.readlines()
 out = train_model_get_cosine_matrix(statements)
 #out.to_csv('pmi.csv', index = False)
-plot(out,out.columns)
+#plot(out,out.columns)
 
 out = np.array(out)
 out = out[np.triu_indices(out.shape[0],k=1)].reshape(66,1)
-data['pmi'] = second[np.triu_indices(first.shape[0],k=1)]
+data['pmi'] = out
+
+data.to_csv('data.csv',index=False)
